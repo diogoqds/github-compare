@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Form } from './styles';
 import logo from '../../assets/images/logo.png';
+import CompareList from '../../components/CompareList';
 
 const Main = () => (
   <Container>
@@ -11,6 +12,8 @@ const Main = () => (
 
       <button type="submit">Buscar</button>
     </Form>
+
+    <CompareList />
   </Container>
 );
 
