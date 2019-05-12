@@ -53,4 +53,31 @@ export const Repository = styled.div`
       }
     }
   }
+
+  div.buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    #remove {
+      background: #f00;
+      color: white;
+    }
+
+    #update {
+      background: yellow;
+      color: white;
+    }
+
+    #remove,
+    #update {
+      border: 0;
+      width: 40%;
+      height: 30px;
+      font-size: 15px;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 `;

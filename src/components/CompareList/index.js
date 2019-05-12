@@ -28,12 +28,14 @@ const CompareList = ({ repositories, removeRepository, updateRepository }) => (
           </li>
         </ul>
 
-        <button type="button" onClick={() => removeRepository(repository.id)}>
-          Remover
-        </button>
-        <button type="button" onClick={() => updateRepository(repository.id)}>
-          Atualizar
-        </button>
+        <div className="buttons">
+          <button id="remove" type="button" onClick={() => removeRepository(repository.id)}>
+            Remover
+          </button>
+          <button id="update" type="button" onClick={() => updateRepository(repository.id)}>
+            Atualizar
+          </button>
+        </div>
       </Repository>
     ))}
   </Container>
