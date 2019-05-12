@@ -53,30 +53,23 @@ class Main extends Component {
     let { repositories } = this.state;
     repositories = repositories.filter(repository => repository.id !== id);
     this.setState({ repositories });
-    localStorage.removeItem('repositories');
     localStorage.setItem('repositories', JSON.stringify(repositories));
   };
 
   updateRepository = async (id) => {
-    this.setState({ loading: true });
     try {
       const { repositories } = this.state;
-      let repository = repositories.find(repo => repo.id === id);
+      const repository = repositories.find(repo => repo.id === id);
       const { data } = await api.get(`/repos/${repository.full_name}`);
-      repository = { ...data };
-      repository.lastCommit = moment(repository.pushed_at).fromNow();
+      data.lastCommit = moment(data.pushed_at).fromNow();
       this.setState({
-        repositories: [...repositories],
-        repositoryInput: '',
+        repositories: repositories.map(repo => (repo.id === data.id ? data : repo)),
         repositoryError: false,
       });
 
-      localStorage.removeItem('repositories');
       localStorage.setItem('repositories', JSON.stringify(repositories));
     } catch (error) {
       this.setState({ repositoryError: true });
-    } finally {
-      this.setState({ loading: false });
     }
   };
 
