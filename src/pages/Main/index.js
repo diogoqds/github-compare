@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { Container, Form } from './styles';
 import logo from '../../assets/images/logo.png';
 import CompareList from '../../components/CompareList';
@@ -18,9 +19,12 @@ class Main extends Component {
     event.preventDefault();
     try {
       const { repositoryInput, repositories } = this.state;
-      const response = await api.get(`/repos/${repositoryInput}`);
+      const { data: repository } = await api.get(`/repos/${repositoryInput}`);
+      
+      repository.lastCommit = moment(repository.pushed_at).fromNow();
+
       this.setState({
-        repositories: [...repositories, response.data],
+        repositories: [...repositories, repository],
         repositoryInput: '',
       });
     } catch (error) {
