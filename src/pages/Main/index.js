@@ -7,6 +7,7 @@ import { api } from '../../services/api';
 
 class Main extends Component {
   state = {
+    loading: false,
     repositoryError: false,
     repositoryInput: '',
     repositories: [],
@@ -18,6 +19,7 @@ class Main extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
+    this.setState({ loading: true });
     try {
       const { repositoryInput, repositories } = this.state;
       const { data: repository } = await api.get(`/repos/${repositoryInput}`);
@@ -31,16 +33,19 @@ class Main extends Component {
       });
     } catch (error) {
       this.setState({ repositoryError: true });
+    } finally {
+      this.setState({ loading: false });
     }
   };
 
   render() {
-    const { repositories, repositoryInput, repositoryError } = this.state;
+    const {
+      repositories, repositoryInput, repositoryError, loading,
+    } = this.state;
 
     return (
       <Container>
         <img src={logo} alt="github compare" />
-
         <Form withError={repositoryError} onSubmit={this.handleSubmit}>
           <input
             type="text"
@@ -49,7 +54,9 @@ class Main extends Component {
             onChange={this.handleRepositoryInput}
           />
 
-          <button type="submit">Buscar</button>
+          <button type="submit">
+            {loading ? <i className="fa fa-spinner fa-pulse" /> : 'Buscar'}
+          </button>
         </Form>
 
         <CompareList repositories={repositories} />
