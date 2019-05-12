@@ -15,7 +15,7 @@ class Main extends Component {
 
   componentDidMount() {
     try {
-      const repositories = JSON.parse(localStorage.getItem('repositories'));
+      const repositories = JSON.parse(localStorage.getItem('repositories')) || [];
       this.setState({ repositories });
     } catch (error) {
       this.setState({ repositoryError: true });
@@ -49,6 +49,37 @@ class Main extends Component {
     }
   };
 
+  removeRepository = (id) => {
+    let { repositories } = this.state;
+    repositories = repositories.filter(repository => repository.id !== id);
+    this.setState({ repositories });
+    localStorage.removeItem('repositories');
+    localStorage.setItem('repositories', JSON.stringify(repositories));
+  };
+
+  updateRepository = async (id) => {
+    this.setState({ loading: true });
+    try {
+      const { repositories } = this.state;
+      let repository = repositories.find(repo => repo.id === id);
+      const { data } = await api.get(`/repos/${repository.full_name}`);
+      repository = { ...data };
+      repository.lastCommit = moment(repository.pushed_at).fromNow();
+      this.setState({
+        repositories: [...repositories],
+        repositoryInput: '',
+        repositoryError: false,
+      });
+
+      localStorage.removeItem('repositories');
+      localStorage.setItem('repositories', JSON.stringify(repositories));
+    } catch (error) {
+      this.setState({ repositoryError: true });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
+
   render() {
     const {
       repositories, repositoryInput, repositoryError, loading,
@@ -70,7 +101,11 @@ class Main extends Component {
           </button>
         </Form>
 
-        <CompareList repositories={repositories} />
+        <CompareList
+          repositories={repositories}
+          removeRepository={this.removeRepository}
+          updateRepository={this.updateRepository}
+        />
       </Container>
     );
   }

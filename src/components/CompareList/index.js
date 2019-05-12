@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Repository } from './styles';
 
 // eslint-disable-next-line react/prop-types
-const CompareList = ({ repositories }) => (
+const CompareList = ({ repositories, removeRepository, updateRepository }) => (
   <Container>
     {repositories.map(repository => (
       <Repository key={repository.id}>
@@ -27,6 +27,13 @@ const CompareList = ({ repositories }) => (
             {repository.lastCommit} <small>last commit</small>
           </li>
         </ul>
+
+        <button type="button" onClick={() => removeRepository(repository.id)}>
+          Remover
+        </button>
+        <button type="button" onClick={() => updateRepository(repository.id)}>
+          Atualizar
+        </button>
       </Repository>
     ))}
   </Container>
@@ -47,6 +54,8 @@ CompareList.protoTypes = {
       pushed_at: PropTypes.string,
     }),
   ).isRequired,
+  removeRepository: PropTypes.func.isRequired,
+  updateRepository: PropTypes.func.isRequired,
 };
 
 CompareList.defaultProps = {
