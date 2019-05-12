@@ -13,6 +13,15 @@ class Main extends Component {
     repositories: [],
   };
 
+  componentDidMount() {
+    try {
+      const repositories = JSON.parse(localStorage.getItem('repositories'));
+      this.setState({ repositories });
+    } catch (error) {
+      this.setState({ repositoryError: true });
+    }
+  }
+
   handleRepositoryInput = (event) => {
     this.setState({ repositoryInput: event.target.value });
   };
@@ -25,12 +34,14 @@ class Main extends Component {
       const { data: repository } = await api.get(`/repos/${repositoryInput}`);
 
       repository.lastCommit = moment(repository.pushed_at).fromNow();
-
+      repositories.push(repository);
       this.setState({
-        repositories: [...repositories, repository],
+        repositories: [...repositories],
         repositoryInput: '',
         repositoryError: false,
       });
+
+      localStorage.setItem('repositories', JSON.stringify(repositories));
     } catch (error) {
       this.setState({ repositoryError: true });
     } finally {
