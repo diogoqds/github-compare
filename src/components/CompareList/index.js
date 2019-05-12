@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Repository } from './styles';
 
+// eslint-disable-next-line react/prop-types
 const CompareList = ({ repositories }) => (
   <Container>
     {repositories.map(repository => (
